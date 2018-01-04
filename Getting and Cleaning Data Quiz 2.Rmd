@@ -1,4 +1,4 @@
-Course 3 Week 2
+# Getting and Cleaning Data Quiz 2
 
 ## Question 1
 
