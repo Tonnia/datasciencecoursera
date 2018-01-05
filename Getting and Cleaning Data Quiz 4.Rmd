@@ -1,0 +1,60 @@
+# Getting and Cleaning Data Quiz 4
+
+## Question 1
+
+```{r}
+## read in data
+fileUrl1 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv"
+download.file(fileUrl1, destfile = "./data/housing.csv")
+Q1Data <- read.csv("./data/housing.csv")
+## string split
+strsplit(names(Q1Data),"wgtp")[[123]]
+```
+
+## Question 2
+
+```{r}
+## read in data
+library(data.table)
+fileUrl2 <-"https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv"
+download.file(fileUrl2, destfile = "./data/GDP.csv")
+Q2Data <- data.table(read.csv("./data/GDP.csv", stringsAsFactors = FALSE))
+Q2Data <- Q2Data[X !="" ]
+Q2Data$X.3 <- as.numeric(gsub(",","",Q2Data$X.3))
+mean(Q2Data$X.3, na.rm = TRUE)
+ ## no right answer
+```
+
+## Question 3
+
+```{r}
+is_United <- grep("^United",Q2Data$X.2)
+length(is_United)
+```
+
+## Question 4
+
+```{r}
+fileUrl4 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv"
+download.file(fileUrl4, destfile = "./data/GDP190.csv")
+Q4Data <- data.table(read.csv("./data/GDP190.csv", stringsAsFactors = FALSE))
+Q4Data <- Q4Data[X !=""]
+fileUrl4_2 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FEDSTATS_Country.csv"
+download.file(fileUrl4_2, destfile = "./data/Education.csv")
+Q4Data_2 <- data.table(read.csv("./data/Education.csv", stringsAsFactors = FALSE))
+head(Q4Data_2)
+merged <- merge(Q4Data, Q4Data_2, by.x = "X", by.y= "CountryCode") 
+notes <- tolower(merged$Special.Notes)
+FiscalEnd <- grepl("fiscal year end", notes)
+is_June <- grepl("june", notes)
+table(FiscalEnd, is_June)
+```
+
+## Question 5
+
+```{r}
+library(quantmod)
+amzn = getSymbols("AMZN",auto.assign=FALSE)
+sampleTimes = index(amzn)
+addmargins(table(year(sampleTimes), weekdays(sampleTimes)))
+```
